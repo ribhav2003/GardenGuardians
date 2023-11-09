@@ -186,6 +186,13 @@ body {
 .c-checkbox:nth-of-type(4):checked
   ~ .c-formContainer
   .c-form
+  .c-form__group:nth-child(3)
+  .c-form__border {
+  width: 0;
+}
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
   .c-form__group:nth-child(4) {
   visibility: visible;
   opacity: 1;
