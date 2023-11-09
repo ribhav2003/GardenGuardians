@@ -19,6 +19,16 @@
   justify-content: center;
 }
 
+.logo {
+  height: 10rem;
+  width: 20rem;
+  background-color: white;
+  float: left;
+  display: flex;
+  /* justify-content: space-around; */
+  justify-content: top;
+}
+
 .signup {
   margin-top: 0.7rem;
   height: 3rem;

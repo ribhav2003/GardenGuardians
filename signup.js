@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const formFields = document.querySelectorAll(".c-form__input");
   const passwordField = document.getElementById("fpass");
   const confirmPasswordField = document.getElementById("confirmPassword");
-
+    
   formFields.forEach((field, index) => {
     const nextButtons = document.querySelectorAll(".c-form__next");
     const border = document.querySelectorAll(".c-form__border");

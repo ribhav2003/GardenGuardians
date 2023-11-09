@@ -7,6 +7,7 @@ body {
   font-family: sans-serif;
   background: linear-gradient(#141e30, #243b55);
   background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
+  /* background: linear-gradient(to right, #01b884, #00ed64); */
 }
 
 .login-box {
@@ -88,8 +89,7 @@ body {
 
 .login-box a:hover {
   /* background: #03e9f4; */
-  background: #00ed64;
-  
+  background: #01b884;
   
   color: #fff;
   color:black;
