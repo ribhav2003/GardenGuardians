@@ -21,7 +21,7 @@
 
 .logo {
   height: 10rem;
-  width: 20rem;
+  width: 21rem;
   background-color: white;
   float: left;
   display: flex;
@@ -29,8 +29,17 @@
   justify-content: top;
 }
 
+#photo{
+  height: 4.4rem;
+  width: 15rem;
+  margin-top: 0.8rem;
+  margin-left: 01rem;
+  /* border-radius: 50%; */
+  /* margin-right: 0.5rem; */
+}
+
 .signup {
-  margin-top: 0.7rem;
+  margin-top: 1.4rem;
   height: 3rem;
   width: 7rem;
   background-color: #00ed64;
@@ -48,7 +57,7 @@
 
 .signin {
   /* background-color: aqua; */
-  margin-top: 0.7rem;
+  margin-top: 1.4rem;
   height: 3rem;
   margin-right: 5px;
   width: 7rem;
