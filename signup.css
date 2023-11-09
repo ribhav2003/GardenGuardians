@@ -2,8 +2,9 @@ body {
   font-family: "Open Sans", sans-serif;
   margin: 0;
   height: 100vh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #00ed64;
   position: relative;
   overflow: hidden;
@@ -60,7 +61,7 @@ body {
 }
 
 .c-checkbox:nth-of-type(2):checked ~ .c-form__progress {
-  width: calc(100vw / 3);
+  width: calc(100vw / 4);
 }
 .c-checkbox:nth-of-type(2):checked
   ~ .c-formContainer
@@ -115,7 +116,7 @@ body {
 }
 
 .c-checkbox:nth-of-type(3):checked ~ .c-form__progress {
-  width: calc((100vw / 3) + 100vw / 3);
+  width: calc((100vw / 4) + 100vw / 4);
 }
 .c-checkbox:nth-of-type(3):checked
   ~ .c-formContainer
@@ -163,6 +164,57 @@ body {
   ~ .c-formContainer
   .c-form
   .c-form__group:nth-child(3)
+  .c-form__input:required:valid
+  ~ .c-form__next {
+  pointer-events: initial;
+  color: #565656;
+}
+
+/* Update styles for progress4 */
+.c-checkbox:nth-of-type(4):checked ~ .c-form__progress {
+  width: calc((100vw / 4) + (100vw / 4) + (100vw / 4));
+}
+
+/* Update styles for the "Confirm your password" field */
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
+  .c-form__group:nth-child(3) {
+  visibility: hidden;
+  opacity: 0;
+}
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
+  .c-form__group:nth-child(4) {
+  visibility: visible;
+  opacity: 1;
+}
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
+  .c-form__group:nth-child(4)
+  .c-form__border {
+  width: 100%;
+}
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
+  .c-form__group:nth-child(4)
+  .c-form__input:not(:placeholder-shown):invalid
+  ~ .c-form__border,
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
+  .c-form__group:nth-child(4)
+  .c-form__input:not(:placeholder-shown):invalid
+  ~ .c-form__next {
+  color: #ff0033;
+}
+.c-checkbox:nth-of-type(4):checked
+  ~ .c-formContainer
+  .c-form
+  .c-form__group:nth-child(4)
   .c-form__input:required:valid
   ~ .c-form__next {
   pointer-events: initial;
@@ -370,4 +422,15 @@ body {
   width: 0;
   background-color: #00684a;
   transition: 0.3s;
+}
+
+.c-form__input:last-child {
+  margin-bottom: 0; /* Remove margin-bottom for the last input field */
+}
+
+.c-form__group-label--error {
+  color: #ff0033;
+  font-size: 14px;
+  transform: translateY(10px);
+  opacity: 1;
 }
