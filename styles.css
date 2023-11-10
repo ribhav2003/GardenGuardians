@@ -1,3 +1,7 @@
+@import url(https://db.onlinewebfonts.com/c/1b4465a199c508f1288ee56a96c5f2bf?family=Value+Serif+Pro+Medium);
+@import url(https://db.onlinewebfonts.com/c/cc5ff80d2d1b0b7c077eefae61d02261?family=Value+Serif+Pro+Regular);
+@import url(https://db.onlinewebfonts.com/c/a575313c6dc4fd00c1a9506e1c3ea4fc?family=Euclid+Circular+A);
+
 * {
   margin: 0;
 }
@@ -20,7 +24,7 @@
 }
 
 .logo {
-  height: 10rem;
+  height: 5rem;
   width: 21rem;
   background-color: white;
   float: left;
@@ -29,7 +33,7 @@
   justify-content: top;
 }
 
-#photo{
+#photo {
   height: 4.4rem;
   width: 15rem;
   margin-top: 0.8rem;
@@ -76,6 +80,30 @@
 .page1 {
   display: flex;
   justify-content: space-around;
+}
+
+.text {
+  background-color: white;
+  /* flex:10; */
+  margin-top: 3rem;
+  margin-left: 5rem;
+  width: 50rem;
+  /* font-family: "Value Serif Pro Medium"; */
+
+  /* font-family: "MongoDB Value Serif", sans-serif; */
+}
+
+.headd {
+  font-family: "Value Serif Pro Regular";
+  font-size: 65px;
+  color: #001e2b;
+}
+
+.sub {
+  font-family: "Euclid Circular A";
+  font-size: 20px;
+  line-height: 32px;
+    color: #3d4f58
 }
 
 #leaf {
