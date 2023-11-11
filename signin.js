@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function signInUser(data) {
-    fetch("http://localhost:5501/login", {
+    fetch("http://localhost:5502/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

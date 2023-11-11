@@ -92,37 +92,6 @@ function emailExists(email) {
 // ... (previous code)
 
 // API endpoint for user login
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-
-  // Retrieve hashed password from the database
-  const sql = "SELECT * FROM users WHERE email = ?";
-  connection.query(sql, [email], async (err, results) => {
-    if (err) {
-      console.error("Error checking user credentials:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-      return;
-    }
-
-    if (results.length === 0) {
-      // User not found or invalid credentials
-      res.status(401).json({ error: "Invalid credentials" });
-    } else {
-      const hashedPassword = results[0].password;
-
-      // Compare the provided password with the hashed password
-      const passwordMatch = await bcrypt.compare(password, hashedPassword);
-
-      if (passwordMatch) {
-        // User successfully logged in
-        res.status(200).json({ message: "Login successful" });
-      } else {
-        // Invalid credentials
-        res.status(401).json({ error: "Invalid credentials" });
-      }
-    }
-  });
-});
 
 // ... (other code)
 
