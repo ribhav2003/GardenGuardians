@@ -226,11 +226,12 @@ body {
 .show-password {
   position: absolute;
   top: 50%;
-  right: 15px;
+  right: 40px;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 20px;
   color: #000; /* Adjust the color as needed */
+  z-index: 1000;
 }
 
 /* Style the eye icon */
