@@ -31,6 +31,14 @@ document.addEventListener("DOMContentLoaded", function () {
           .querySelector(".c-form__groupLabel");
         groupLabel.innerHTML = "Password not the same";
         groupLabel.classList.add("c-form__group-label--error");
+
+        // Show error message and change background color to red
+        showResult("Registration Failed: Passwords do not match", "error");
+
+        // Redirect to signup.html after 3 seconds
+        setTimeout(() => {
+          window.location.href = "signup.html";
+        }, 3000);
       } else {
         const groupLabel = confirmPasswordField
           .closest(".c-form__group")
@@ -108,16 +116,26 @@ document.addEventListener("DOMContentLoaded", function () {
             return response.json().then((data) => {
               // Handle username/email already exists error
               console.error("Registration error:", data.error);
-              // Update your UI to show an error message
-              // For example, you can display the error message in an alert
-              alert("Registration error: " + data.error);
+
+              // Show error message and change background color to red
+              showResult("Registration Failed: User already exists", "error");
+
+              // Redirect to signup.html after 3 seconds
+              setTimeout(() => {
+                window.location.href = "signup.html";
+              }, 3000);
             });
           } else {
             // Handle other error cases
             console.error("Registration error:", response.statusText);
-            // Update your UI to show a generic error message
-            // For example, you can display a generic error message in an alert
-            alert("Registration error: " + response.statusText);
+
+            // Show error message and change background color to red
+            showResult("Registration Failed: Something went wrong", "error");
+
+            // Redirect to signup.html after 3 seconds
+            setTimeout(() => {
+              window.location.href = "signup.html";
+            }, 3000);
           }
         }
         return response.json();
@@ -125,14 +143,49 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         // Handle successful registration
         console.log(data.message);
-        // Update your UI or redirect the user to the login page
+
+        // Show success message and change background color to green
+        showResult(
+          "Welcome aboard! You have been successfully registered",
+          "success"
+        );
+
+        // Redirect to index.html after 3 seconds
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3000);
       })
       .catch((error) => {
         // Handle network or other unexpected errors
         console.error("Error:", error);
-        // Update your UI to show an error message
-        // For example, you can display a generic error message in an alert
-        alert("Registration error: Something went wrong");
+
+        // Show error message and change background color to red
+        showResult("Registration Failed: Something went wrong", "error");
+
+        // Redirect to signup.html after 3 seconds
+        setTimeout(() => {
+          window.location.href = "signup.html";
+        }, 3000);
       });
+  }
+
+  function showResult(message, type) {
+    // Create a result box dynamically
+    const resultBox = document.createElement("div");
+    resultBox.classList.add("result-box", type);
+    resultBox.textContent = message;
+
+    // Append resultBox to the body
+    document.body.appendChild(resultBox);
+
+    // Change background color to red for error, and green for success
+    const progress = document.querySelector(".c-form__progress");
+    progress.style.backgroundColor = type === "error" ? "#ff0033" : "#00ed64";
+
+    // Hide the result box and reset background color after 3 seconds
+    setTimeout(() => {
+      resultBox.style.display = "none";
+      document.body.style.backgroundColor = "";
+    }, 3000);
   }
 });
