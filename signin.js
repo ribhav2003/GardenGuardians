@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const usernameField = formFields[0];
   const passwordField = formFields[1];
   const overlay = document.querySelector(".overlay");
+//   const passwordField = document.getElementById("password");
+  const showPasswordButton = document.getElementById("showPassword");
   const signInButton = document.querySelector(".login-box a");
   const resultBox = document.createElement("div");
   resultBox.classList.add("result-box");
@@ -20,6 +22,28 @@ document.addEventListener("DOMContentLoaded", function () {
       email: username,
       password: password,
     });
+  });
+
+  showPasswordButton.addEventListener("click", function () {
+    const passwordInput = document.getElementById("password");
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+    } else {
+      passwordInput.type = "password";
+    }
+  });
+
+  passwordField.addEventListener("keyup", function (event) {
+    // Check if the "Enter" key is pressed
+    if (event.key === "Enter") {
+      const username = usernameField.value;
+      const password = passwordField.value;
+
+      signInUser({
+        email: username,
+        password: password,
+      });
+    }
   });
 
   function signInUser(data) {

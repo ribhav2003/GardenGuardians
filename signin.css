@@ -221,3 +221,19 @@ body {
   background: rgba(0, 0, 0, 0.5); /* Adjust the opacity as needed */
   z-index: 1;
 }
+
+/* Add styling for the show password icon */
+.show-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 20px;
+  color: #000; /* Adjust the color as needed */
+}
+
+/* Style the eye icon */
+.show-password i {
+  font-size: 20px;
+}
