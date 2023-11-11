@@ -59,6 +59,23 @@
   border-radius: 60px;
 }
 
+.get {
+  margin-top: 1.4rem; 
+  height: 3.5rem;
+  width: 8rem;
+  background-color: #00ed64;
+  outline: none;
+  border: 1px solid #00684a;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.get:hover {
+  border-radius: 60px;
+}
+
 .signin {
   /* background-color: aqua; */
   margin-top: 1.4rem;
@@ -103,7 +120,7 @@
   font-family: "Euclid Circular A";
   font-size: 20px;
   line-height: 32px;
-    color: #3d4f58
+  color: #3d4f58;
 }
 
 #leaf {
