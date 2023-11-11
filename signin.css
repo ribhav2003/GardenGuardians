@@ -226,7 +226,7 @@ body {
 .show-password {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 15px;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 20px;
