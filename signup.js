@@ -2,10 +2,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const formFields = document.querySelectorAll(".c-form__input");
   const passwordField = document.getElementById("fpass");
   const confirmPasswordField = document.getElementById("confirmPassword");
-    
+
+  let registrationStep = 0; // Track the current registration step
+
   formFields.forEach((field, index) => {
     const nextButtons = document.querySelectorAll(".c-form__next");
     const border = document.querySelectorAll(".c-form__border");
+
     confirmPasswordField.addEventListener("input", function () {
       if (passwordField.value !== confirmPasswordField.value) {
         nextButtons[3].classList.add("disabled");
@@ -19,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         confirmPasswordField.setCustomValidity("");
       }
     });
+
     nextButtons[3].addEventListener("click", function () {
       if (passwordField.value !== confirmPasswordField.value) {
         // Handle passwords not matching
@@ -33,8 +37,23 @@ document.addEventListener("DOMContentLoaded", function () {
           .querySelector(".c-form__groupLabel");
         groupLabel.innerHTML = "Confirm your password.";
         groupLabel.classList.remove("c-form__group-label--error");
+
+        // Increment the registration step
+        registrationStep++;
+
+        if (registrationStep === 4) {
+          // Register the user only if they have completed the entire form
+          registerUser({
+            username: document.getElementById("username").value,
+            email: document.getElementById("femail").value,
+            password: document.getElementById("fpass").value,
+          });
+        }
       }
     });
+
+    // ... (rest of your existing code remains unchanged)
+
     field.addEventListener("keyup", function (event) {
       const nextButton = field
         .closest(".c-form__group")
@@ -53,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
             (field.id === "confirmPassword" && !arePasswordsEqual())
           ) {
             // Handle validation errors or display messages here
-
             console.log("Passwords are not equal.");
           } else {
             nextButton.click();
@@ -73,5 +91,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordField = document.getElementById("fpass");
     const confirmPasswordField = document.getElementById("confirmPassword");
     return passwordField.value === confirmPasswordField.value;
+  }
+
+  function registerUser(data) {
+    fetch("http://localhost:5501/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Check for specific error status codes
+          if (response.status === 400) {
+            return response.json().then((data) => {
+              // Handle username/email already exists error
+              console.error("Registration error:", data.error);
+              // Update your UI to show an error message
+              // For example, you can display the error message in an alert
+              alert("Registration error: " + data.error);
+            });
+          } else {
+            // Handle other error cases
+            console.error("Registration error:", response.statusText);
+            // Update your UI to show a generic error message
+            // For example, you can display a generic error message in an alert
+            alert("Registration error: " + response.statusText);
+          }
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle successful registration
+        console.log(data.message);
+        // Update your UI or redirect the user to the login page
+      })
+      .catch((error) => {
+        // Handle network or other unexpected errors
+        console.error("Error:", error);
+        // Update your UI to show an error message
+        // For example, you can display a generic error message in an alert
+        alert("Registration error: Something went wrong");
+      });
   }
 });
