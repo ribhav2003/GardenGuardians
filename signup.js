@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Change background color to red for error, and green for success
     const progress = document.querySelector(".c-form__progress");
-    progress.style.backgroundColor = type === "error" ? "#ff0033" : "#00ed64";
+    progress.style.backgroundColor = type === "error" ? "#ff0033" : "#00684a";
 
     // Hide the result box and reset background color after 3 seconds
     setTimeout(() => {
