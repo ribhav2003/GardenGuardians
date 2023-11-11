@@ -2,8 +2,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const formFields = document.querySelectorAll(".user-box input");
   const usernameField = formFields[0];
   const passwordField = formFields[1];
-
+  const overlay = document.querySelector(".overlay");
   const signInButton = document.querySelector(".login-box a");
+  const resultBox = document.createElement("div");
+  resultBox.classList.add("result-box");
+
+  // Append resultBox to the login box
+  document.querySelector(".login-box").appendChild(resultBox);
 
   signInButton.addEventListener("click", function (event) {
     event.preventDefault();
@@ -31,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
           if (response.status === 401) {
             const errorData = await response.json();
             console.error("Login error:", errorData.error);
-            alert("Login error: " + errorData.error);
+            showResult("Login error: " + errorData.error, "error");
           } else {
             console.error("Login error:", response.statusText);
-            alert("Login error: Something went wrong");
+            showResult("Login error: Something went wrong", "error");
           }
           throw new Error("Login failed");
         }
@@ -43,11 +48,32 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         // Handle successful login
         console.log(data.message);
-        // Update your UI or redirect the user to the dashboard
+        showResult("Login Successful", "success", true); // Redirect to index.html
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Additional error handling if needed
       });
+  }
+
+  function showResult(message, type, success) {
+    resultBox.textContent = message;
+    resultBox.className = `result-box ${type}`;
+    resultBox.style.display = "block";
+
+    overlay.style.display = "block"; // Show the overlay
+    document.body.style.overflow = "hidden"; // Disable scrolling
+
+    // Hide the result box and overlay after a few seconds (adjust the timeout as needed)
+    setTimeout(() => {
+      resultBox.style.display = "none";
+      overlay.style.display = "none";
+      document.body.style.overflow = "auto"; // Enable scrolling
+
+      if (success) {
+        window.location.href = "index.html";
+      } else {
+        window.location.href = "signin.html";
+      }
+    }, 3000);
   }
 });
