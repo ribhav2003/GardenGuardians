@@ -102,7 +102,7 @@ app.post("/addToNursery", async (req, res) => {
 
     if (tableRows.length === 0) {
       // Create the stored procedure
-      await createNurseryTable;
+      await createNurseryTable();
     }
     // Check if the nursery table exists
     // const tableExists = await checkIfTableExists("nursery");
