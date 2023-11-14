@@ -34,10 +34,10 @@ Before you begin, ensure you have the following installed:
 6. **Getting Started:**
    Simply open up index.html on your browser and Get Started!
 
-**Additional Notes**
-Uses HTML, CSS, Javascript for Front-End (Website)
-Node.js as the Backend (APIs)
-The project uses MySQL for data storage. Make sure your MySQL server is running and correctly configured.
-If you encounter any issues, check the console logs for error messages.
+## Additional Notes
+- Uses HTML, CSS, Javascript for Front-End (Website)
+- Node.js as the Backend (APIs)
+- The project uses MySQL for data storage. Make sure your MySQL server is running and correctly configured.
+- If you encounter any issues, check the console logs for error messages.
 
 **Happy gardening!**
