@@ -1,19 +1,23 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: linear-gradient(#141e30, #243b55);
-    background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
+@import url(https://db.onlinewebfonts.com/c/cc5ff80d2d1b0b7c077eefae61d02261?family=Value+Serif+Pro+Regular);
+@import url(https://db.onlinewebfonts.com/c/a575313c6dc4fd00c1a9506e1c3ea4fc?family=Euclid+Circular+A);
+
+* {
+  margin: 0;
+}
+
+.navbar {
+  height: 4.4rem;
+  width: 100%;
+  background-color: red;
+  margin-bottom: 4rem;
 }
 
 .welcome-box {
-    text-align: center;
-    margin-top: 100px;
-    color: #fff;
-}
-
-h2 {
-    font-size: 24px;
+  text-align: center;
+  /* margin-top: ; */
+  font-family: "Value Serif Pro Regular";
+  color: #001e2b;
+  font-size: 2rem;
 }
 
 /* Add additional styles as needed */
