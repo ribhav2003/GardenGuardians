@@ -4,18 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Home | GardenGuardians</title>
     <link rel="stylesheet" href="home.css">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
 </head>
 
 <body>
     <div class="navbar">
+        <div class="logoo"><a href="home.html"><img src="images/logo.png" alt="" id="photoo"></a></div>
+        <!-- <div><i class="glyphicon glyphicon-user" id="user"></i></div> -->
+        <div class="search-bar-container active">
+            <img src="https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/magnifier-512.png" alt="magnifier"
+                class="magnifier" />
+            <input type="text" class="input" placeholder="Search ..." />
+            <!-- <img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-25-512.png" alt="mic-icon" -->
+            <!-- class="mic-icon" /> -->
+        </div>
+        <!-- <input type="text" placeholder="Search" id="search"> -->
+        <i class="fa-solid fa-user" id="user"></i>
 
     </div>
     <div class="welcome-box">
         Welcome, <span id="username"></span>!
     </div>
     <script src="home.js"></script>
+    <script src="https://kit.fontawesome.com/7daae4d489.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

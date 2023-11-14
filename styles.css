@@ -35,7 +35,7 @@
 
 #photo {
   height: 4.4rem;
-  width: 15rem;
+  width: 16rem;
   margin-top: 0.8rem;
   margin-left: 01rem;
   /* border-radius: 50%; */
@@ -60,7 +60,7 @@
 }
 
 .get {
-  margin-top: 1.4rem; 
+  margin-top: 1.4rem;
   height: 3.5rem;
   width: 8rem;
   background-color: #00ed64;
