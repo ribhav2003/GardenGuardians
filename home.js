@@ -7,31 +7,61 @@ document.addEventListener("DOMContentLoaded", function () {
   welcomeMessageElement.textContent = userd;
 
   const searchBarContainerEl = document.querySelector(".search-bar-container");
+  const searchInputEl = document.querySelector(".input");
+  const searchResultsEl = document.getElementById("searchResults");
+
+  searchInputEl.addEventListener("input", async () => {
+    const searchTerm = searchInputEl.value.trim();
+
+    // Show search results dynamically
+    if (searchTerm.length >= 3) {
+      try {
+        const response = await fetch(
+          `http://localhost:5503/searchPlants?searchTerm=${searchTerm}`
+        );
+        const data = await response.json();
+
+        if (data.plants.length > 0) {
+          const resultItems = data.plants.map(
+            (plant) =>
+              `<div class="search-result-item" data-plant-id="${plant.p_id}">${plant.common_name}</div>`
+          );
+          searchResultsEl.innerHTML = resultItems.join("");
+          searchResultsEl.style.display = "block";
+        } else {
+          searchResultsEl.innerHTML = "No results found";
+          searchResultsEl.style.display = "block";
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    } else {
+      // Hide search results if search term is less than 3 characters
+      searchResultsEl.style.display = "none";
+    }
+  });
+
+  searchResultsEl.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target.classList.contains("search-result-item")) {
+      const plantId = target.dataset.plantId;
+      if (plantId) {
+        // Redirect to the plant details page with the corresponding plantId
+        window.location.href = `plantDetails.html?id=${plantId}`;
+      }
+    }
+  });
+
+  // Hide search results on clicking anywhere outside the search bar
+  document.addEventListener("click", (event) => {
+    if (!searchBarContainerEl.contains(event.target)) {
+      searchResultsEl.style.display = "none";
+    }
+  });
 
   const magnifierEl = document.querySelector(".magnifier");
 
   magnifierEl.addEventListener("click", () => {
     searchBarContainerEl.classList.toggle("active");
   });
-
-  // Assume this code is running in another client-side script, like within a browser
-
-  // fetch('http://localhost:5502/getUserDataFromOtherClient', {
-  //   method: 'GET',
-  //   credentials: 'same-origin', // include cookies when making the request, assumes the server is on the same origin
-  // })
-  //   .then(async(response) => {
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-  //     return response.json();
-  //   })
-  //   .then(data => {
-  //     // Handle the data received from the server
-  //     console.log('User data from another client-side script:', data);
-  //   })
-  //   .catch(error => {
-  //     // Handle errors during the fetch
-  //     console.error('Fetch error:', error);
-  //   });
 });
