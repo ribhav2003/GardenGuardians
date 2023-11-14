@@ -65,12 +65,12 @@
   left: 750px;
   display: flex;
   align-items: center;
-  background-color: #99f443;
+  background-color: #00ed64;
   padding: 5px;
   width: 300px;
   height: 50px;
   border-radius: 50px;
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -2px -2px 10px #99f443;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -2px -2px 10px #00ed64;
   margin: 50px;
   position: relative;
   transition: width 1.5s;
@@ -109,9 +109,9 @@
   max-height: 200px; /* Adjust the max height as needed */
   margin: 0 auto;
   padding: 10px;
-  background-color: #99f443;
+  background-color: #00ed64;
   border-radius: 10px;
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -2px -2px 10px #99f443;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -2px -2px 10px #00ed64;
   position: absolute;
   top: 100%; /* Position below the search bar */
   left: 10px; /* Adjust the left position as needed */
@@ -127,5 +127,5 @@
 }
 
 .search-result-item:hover {
-  background-color: #c3ff84; /* Adjust the hover color as needed */
+  background-color: #00ed64; /* Adjust the hover color as needed */
 }
