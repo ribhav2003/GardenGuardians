@@ -71,8 +71,11 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         // Handle successful login
+        console.log(data);
         console.log(data.message);
-        showResult("Login Successful", "success", true); // Redirect to index.html
+        localStorage.setItem('usersd',JSON.stringify(data.username));
+        localStorage.setItem('emaild',JSON.stringify(usernameField.value));
+        showResult("Login Successful", "success", true, data.username);// Redirect to index.html
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -94,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.style.overflow = "auto"; // Enable scrolling
 
       if (success) {
-        window.location.href = "index.html";
+        window.location.href = "home.html";
       } else {
         window.location.href = "signin.html";
       }

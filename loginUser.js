@@ -13,21 +13,22 @@ const secretKey = crypto.randomBytes(32).toString("hex");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 app.use(cors());
 app.use(cookieParser());
 app.use(
   session({
-    secret: secretKey, // Change this to a secure random key
+    secret: secretKey,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set to true if using HTTPS
+    cookie: { secure: false },
   })
 );
 
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root", // Replace with your MySQL password
+  password: "root",
   database: "plant_care",
 });
 
@@ -42,7 +43,6 @@ connection.connect((err) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  // Retrieve hashed password from the database
   const sql = "SELECT * FROM users WHERE email = ?";
   connection.query(sql, [email], async (err, results) => {
     if (err) {
@@ -52,31 +52,42 @@ app.post("/login", (req, res) => {
     }
 
     if (results.length === 0) {
-      // User not found or invalid credentials
       res.status(401).json({ error: "Invalid credentials" });
     } else {
       const hashedPassword = results[0].password;
-
-      // Compare the provided password with the hashed password
       const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
       if (passwordMatch) {
-        // Create a session and store user data
         req.session.user = {
           userId: results[0].id,
           email: results[0].email,
           username: results[0].username,
-          // Add more user data as needed
         };
         console.log("User details stored in session:", req.session.user);
-        // User successfully logged in
-        res.status(200).json({ message: "Login successful" });
+        // localStorage.setItem('uemail',JSON.stringify(results[0].email));
+        res
+          .status(200)
+          .json({ message: "Login successful", username: results[0].username });
       } else {
-        // Invalid credentials
         res.status(401).json({ error: "Invalid credentials" });
       }
     }
   });
+});
+
+app.get("/getUserData", (req, res) => {
+  if (req.session.user && req.session.user.username) {
+    res.json({ username: req.session.user.username });
+  } else {
+    res.status(401).json({ error: "User data not found" });
+  }
+});
+app.get("/getUserDataFromOtherClient", (req, res) => {
+  if (req.session.user && req.session.user.username) {
+    res.json({ username: req.session.user.username });
+  } else {
+    res.status(401).json({ error: "User data not found" });
+  }
 });
 
 app.listen(port, () => {
