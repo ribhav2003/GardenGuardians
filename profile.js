@@ -1,35 +1,61 @@
 // profile.js
 document.addEventListener("DOMContentLoaded", function () {
-    const usernameElement = document.getElementById("username");
-    const emailElement = document.getElementById("email");
-    const plantListElement = document.getElementById("plantList");
+  const usernameElement = document.getElementById("username");
+  const emailElement = document.getElementById("email");
+  const plantListElement = document.getElementById("plantList");
+  const uid = JSON.parse(localStorage.getItem("id"));
 
-    // Retrieve user data from local storage
-    const userd = JSON.parse(localStorage.getItem("usersd"));
-    const emailsd = JSON.parse(localStorage.getItem("emaild"));
+  // Retrieve user data from local storage
+  const userd = JSON.parse(localStorage.getItem("usersd"));
+  const emailsd = JSON.parse(localStorage.getItem("emaild"));
 
-    // Display username and email ID
-    usernameElement.textContent = userd;
-    emailElement.textContent = emailsd;
+  // Display username and email ID
+  usernameElement.textContent = userd;
+  emailElement.textContent = emailsd;
 
-    // Fetch and display the list of plants in the nursery
-    fetchPlantsInNursery();
-});
+  // Fetch and display the list of plants in the nursery
+  fetchPlantsInNursery(uid)
+    .then((plants) => {
+      // Display the list of plants in the nursery
+      displayPlantsInNursery(plants);
+    })
+    .catch((error) => {
+      console.error("Error fetching plants in nursery:", error);
+    });
 
-async function fetchPlantsInNursery() {
+  // Function to fetch plants in the user's nursery
+  async function fetchPlantsInNursery(userId) {
     try {
-        // Fetch plants from the server (replace with your actual endpoint)
-        const response = await fetch("http://localhost:5503/plantsInNursery");
-        const data = await response.json();
-
-        // Display the list of plants
-        if (data.plants.length > 0) {
-            const plantItems = data.plants.map((plant) => `<li>${plant.common_name}</li>`);
-            plantListElement.innerHTML = plantItems.join("");
-        } else {
-            plantListElement.innerHTML = "No plants in the nursery";
-        }
+      const response = await fetch(
+        `http://localhost:5503/getPlantsInNursery?userId=${userId}`
+      );
+      const data = await response.json();
+      return data.plants || [];
     } catch (error) {
-        console.error("Error fetching plants:", error);
+      throw error;
     }
-}
+  }
+
+  // Function to display the list of plants in the nursery
+  function displayPlantsInNursery(plants) {
+    const plantList = plants.map((plant) => {
+      // Create a list item for each plant
+      const listItem = document.createElement("li");
+      listItem.textContent = plant.common_name;
+
+      // Add a click event listener to redirect to the plant details page
+      listItem.addEventListener("click", function () {
+        // Redirect to the plant details page with the plant ID
+        window.location.href = `/plantDetail?id=${plant.p_id}`;
+      });
+
+      return listItem;
+    });
+
+    // Clear any existing content and append the new plant list
+    plantListElement.innerHTML = "";
+    plantList.forEach((item) => {
+      plantListElement.appendChild(item);
+    });
+  }
+});

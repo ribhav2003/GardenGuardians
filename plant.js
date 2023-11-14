@@ -96,13 +96,21 @@ app.post("/addToNursery", async (req, res) => {
   }
 
   try {
-    // Check if the nursery table exists
-    const tableExists = await checkIfTableExists("nursery");
+    const tableExists = "SHOW PROCEDURE STATUS LIKE 'nursery';";
+    const [tableRows] = await connection.promise().query(tableExists);
+    // const procedureExists = await checkIfProcedureExists("GetPlantDetailsById");
 
-    if (!tableExists) {
-      // Create the nursery table
-      await createNurseryTable();
+    if (tableRows.length === 0) {
+      // Create the stored procedure
+      await createNurseryTable;
     }
+    // Check if the nursery table exists
+    // const tableExists = await checkIfTableExists("nursery");
+
+    // if (!tableExists) {
+    //   // Create the nursery table
+    //   await createNurseryTable();
+    // }
 
     // Call the stored procedure to insert into the nursery table
     await insertIntoNursery(userId, plantId);
@@ -141,9 +149,9 @@ async function createNurseryTable() {
   try {
     const createTableQuery = `
       CREATE TABLE nursery (
-        id INT AUTO_INCREMENT PRIMARY KEY,
         UserID INT,
         p_id INT,
+        PRIMARY KEY (UserID, p_id),
         FOREIGN KEY (UserID) REFERENCES users(ID),
         FOREIGN KEY (p_id) REFERENCES plants(p_id)
       );
@@ -169,12 +177,23 @@ async function insertIntoNursery(userId, plantId) {
     `;
 
     // Check if the procedure exists
-    const procedureExists = await checkIfProcedureExists("InsertIntoNursery");
+    const checkProcedureQuery =
+      "SHOW PROCEDURE STATUS LIKE 'InsertIntoNursery';";
+    const [procedureRows] = await connection
+      .promise()
+      .query(checkProcedureQuery);
+    // const procedureExists = await checkIfProcedureExists("GetPlantDetailsById");
 
-    if (!procedureExists) {
+    if (procedureRows.length === 0) {
       // Create the stored procedure
       await connection.promise().query(insertProcedure);
     }
+    // const procedureExists = await checkIfProcedureExists("InsertIntoNursery");
+
+    // if (!procedureExists) {
+    //   // Create the stored procedure
+    //   await connection.promise().query(insertProcedure);
+    // }
 
     // Call the stored procedure to insert into the nursery table
     await connection
@@ -210,6 +229,95 @@ async function checkIfProcedureExists(procedureName) {
     }
   } catch (error) {
     console.error("Error checking if procedure exists:", error);
+    throw error;
+  }
+}
+
+// API endpoint to get plants in the user's nursery
+app.get("/getPlantsInNursery", async (req, res) => {
+  const userId = req.query.userId; // Assuming you pass the user ID as a query parameter
+
+  if (!userId) {
+    return res.status(400).json({ error: "User ID not provided" });
+  }
+
+  try {
+    const checkProcedureQuery =
+      "SHOW PROCEDURE STATUS LIKE 'GetPlantsInNursery';";
+    const [procedureRows] = await connection
+      .promise()
+      .query(checkProcedureQuery);
+    // const procedureExists = await checkIfProcedureExists("GetPlantDetailsById");
+
+    if (procedureRows.length === 0) {
+      // Create the stored procedure
+      await createGetPlantsInNurseryProcedure();
+    }
+    // Check if the stored procedure exists
+    // const procedureExists = await checkIfProcedureExists("GetPlantsInNursery");
+
+    // if (!procedureExists) {
+    //     // Create the stored procedure
+    //     await createGetPlantsInNurseryProcedure();
+    // }
+
+    // Call the stored procedure to get plants in the nursery
+    const plantsInNursery = await getPlantsInNursery(userId);
+
+    // Send the plant information
+    res.json({ plants: plantsInNursery });
+  } catch (error) {
+    console.error("Error fetching plants in nursery:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Function to create the stored procedure to get plants in the nursery
+async function createGetPlantsInNurseryProcedure() {
+  try {
+    const getPlantsInNurseryProcedure = `
+            CREATE PROCEDURE GetPlantsInNursery(IN p_userId INT)
+BEGIN
+    SELECT
+        plants.p_id,
+        plants.common_name
+    FROM
+        nursery
+    JOIN plants ON
+        nursery.p_id = plants.p_id
+        AND nursery.UserID = p_userId;
+END;
+
+        `;
+
+    // Execute the procedure creation query
+    await connection.promise().query(getPlantsInNurseryProcedure);
+  } catch (error) {
+    console.error("Error creating stored procedure:", error);
+    throw error;
+  }
+}
+
+// Function to get plants in the user's nursery using the stored procedure
+async function getPlantsInNursery(userId) {
+  const query = "CALL GetPlantsInNursery(?)";
+  const params = [userId];
+
+  try {
+    const [rows] = await connection.promise().query(query, params);
+
+    if (rows.length > 0) {
+      const plantsInNursery = rows[0].map((row) => ({
+        p_id: row.p_id,
+        common_name: row.common_name,
+      }));
+
+      return plantsInNursery;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error("Error executing query:", error);
     throw error;
   }
 }
