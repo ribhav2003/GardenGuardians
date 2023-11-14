@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Add a click event listener to redirect to the plant details page
       listItem.addEventListener("click", function () {
         // Redirect to the plant details page with the plant ID
-        window.location.href = `/plantDetail?id=${plant.p_id}`;
+        window.location.href = `/plantDetails.html?id=${plant.p_id}`;
       });
 
       return listItem;

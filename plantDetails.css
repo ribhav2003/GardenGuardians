@@ -44,6 +44,8 @@
   transform: translateY(-80px);
   position: absolute;
   top: 6.8rem;
+  cursor: pointer;
+
   right: 4rem; /* Adjust the margin as needed */
   font-size: 2rem; /* Adjust the font size as needed */
   color: #00ed64; /* Adjust the color as needed */
@@ -166,4 +168,8 @@
   font-family: "Value Serif Pro Regular";
   color: #001e2b;
   font-size: 1.5rem;
+}
+
+.navbar #user:hover {
+  color: #007bff;
 }

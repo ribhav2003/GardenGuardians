@@ -12,7 +12,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   const wateringElement = document.getElementById("watering");
   const sunlightElement = document.getElementById("sunlight");
   const plantImageElement = document.getElementById("plantImage");
-
+  const userIcon = document.getElementById("user");
+  userIcon.addEventListener("click", function () {
+    // Redirect to the profile page (replace "profile.html" with your actual profile page)
+    window.location.href = "profile.html";
+  });
   const searchBarContainerEl = document.querySelector(".search-bar-container");
   const searchInputEl = document.querySelector(".input");
   const searchResultsEl = document.getElementById("searchResults");
