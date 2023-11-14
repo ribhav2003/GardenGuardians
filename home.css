@@ -47,6 +47,7 @@
   right: 4rem; /* Adjust the margin as needed */
   font-size: 2rem; /* Adjust the font size as needed */
   color: #00ed64; /* Adjust the color as needed */
+  cursor: pointer;
 }
 
 .welcome-box {
@@ -129,3 +130,8 @@
 .search-result-item:hover {
   background-color: #00ed64; /* Adjust the hover color as needed */
 }
+
+.navbar #user:hover {
+  color: #007bff;
+}
+
