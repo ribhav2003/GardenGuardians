@@ -10,15 +10,31 @@
 </head>
 
 <body>
+    <div class="navbar">
+        <div class="logoo"><a href="home.html"><img src="images/logo.png" alt="" id="photoo"></a></div>
+        <div class="btn">
+            <a href="#"><button class="add">Add Plant</button></a>
+        </div>
+        <div class="search-bar-container active">
+            <img src="https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/magnifier-512.png"
+                alt="magnifier" class="magnifier" />
+            <input type="text" class="input" placeholder="Search ..." />
+            <div class="search-results" id="searchResults"></div>
+        </div>
+        <i class="fa-solid fa-user" id="user"></i>
+    </div>
     <div class="plant-details-container">
-        <h1 id="commonName"></h1>
-        <p id="scientificName"></p>
-        <p id="cycle"></p>
-        <p id="watering"></p>
-        <p id="sunlight"></p>
         <img id="plantImage" alt="Plant Image">
+        <div class="plant-details">
+            <h1 id="commonName"></h1>
+            <p id="scientificName"></p>
+            <p id="cycle"></p>
+            <p id="watering"></p>
+            <p id="sunlight"></p>
+        </div>
     </div>
     <script src="plantDetails.js"></script>
+    <script src="https://kit.fontawesome.com/7daae4d489.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
