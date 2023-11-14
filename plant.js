@@ -96,7 +96,7 @@ app.post("/addToNursery", async (req, res) => {
   }
 
   try {
-    const tableExists = "SHOW PROCEDURE STATUS LIKE 'nursery';";
+    const tableExists = "SHOW table STATUS LIKE 'nursery';";
     const [tableRows] = await connection.promise().query(tableExists);
     // const procedureExists = await checkIfProcedureExists("GetPlantDetailsById");
 
