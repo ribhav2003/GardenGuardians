@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const usernameField = formFields[0];
   const passwordField = formFields[1];
   const overlay = document.querySelector(".overlay");
-//   const passwordField = document.getElementById("password");
+  //   const passwordField = document.getElementById("password");
   const showPasswordButton = document.getElementById("showPassword");
   const signInButton = document.querySelector(".login-box a");
   const resultBox = document.createElement("div");
@@ -73,9 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Handle successful login
         console.log(data);
         console.log(data.message);
-        localStorage.setItem('usersd',JSON.stringify(data.username));
-        localStorage.setItem('emaild',JSON.stringify(usernameField.value));
-        showResult("Login Successful", "success", true, data.username);// Redirect to index.html
+        localStorage.setItem("usersd", JSON.stringify(data.username));
+        localStorage.setItem("emaild", JSON.stringify(usernameField.value));
+        localStorage.setItem("id", JSON.stringify(data.userId));
+        showResult("Login Successful", "success", true, data.username); // Redirect to index.html
       })
       .catch((error) => {
         console.error("Error:", error);

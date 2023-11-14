@@ -65,9 +65,11 @@ app.post("/login", (req, res) => {
         };
         console.log("User details stored in session:", req.session.user);
         // localStorage.setItem('uemail',JSON.stringify(results[0].email));
-        res
-          .status(200)
-          .json({ message: "Login successful", username: results[0].username });
+        res.status(200).json({
+          message: "Login successful",
+          username: results[0].username,
+          userId: results[0].id,
+        });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }

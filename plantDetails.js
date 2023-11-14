@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", async function () {
+  const userd = JSON.parse(localStorage.getItem("usersd"));
+  const emailsd = JSON.parse(localStorage.getItem("emaild"));
+  const uid = JSON.parse(localStorage.getItem("id"));
+  //   const uid = JSON.parse(localStorage.getItem("userID"));
+  console.log(userd);
+  console.log(emailsd);
+  console.log(uid);
   const commonNameElement = document.getElementById("commonName");
   const scientificNameElement = document.getElementById("scientificName");
   const cycleElement = document.getElementById("cycle");
@@ -100,4 +107,38 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (error) {
     console.error("Error fetching plant details:", error);
   }
+
+  const addButton = document.querySelector(".add");
+
+  addButton.addEventListener("click", async function () {
+    // Extract plant ID from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const plantId = urlParams.get("id");
+
+    if (!plantId) {
+      console.error("Plant ID not provided");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5503/addToNursery", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: uid, plantId }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Plant added to the nursery successfully!");
+      } else {
+        alert("Failed to add plant to the nursery. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding plant to nursery:", error);
+      alert("An error occurred. Please try again later.");
+    }
+  });
 });

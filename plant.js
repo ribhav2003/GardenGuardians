@@ -84,6 +84,108 @@ app.get("/getPlantDetails", async (req, res) => {
   }
 });
 
+// API endpoint for adding plants to the nursery
+// ...
+
+// API endpoint for adding plants to the nursery
+app.post("/addToNursery", async (req, res) => {
+  const { userId, plantId } = req.body;
+
+  if (!userId || !plantId) {
+    return res.status(400).json({ error: "UserID and PlantID are required" });
+  }
+
+  try {
+    // Check if the nursery table exists
+    const tableExists = await checkIfTableExists("nursery");
+
+    if (!tableExists) {
+      // Create the nursery table
+      await createNurseryTable();
+    }
+
+    // Call the stored procedure to insert into the nursery table
+    await insertIntoNursery(userId, plantId);
+
+    res.json({ success: true, message: "Plant added to nursery" });
+  } catch (error) {
+    console.error("Error adding plant to nursery:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Function to check if a table exists
+async function checkIfTableExists(tableName) {
+  try {
+    const query = `
+      SELECT
+        COUNT(*)
+      FROM
+        information_schema.TABLES
+      WHERE
+        TABLE_SCHEMA = 'plant_care'
+        AND TABLE_NAME = ?;
+    `;
+
+    const [rows] = await connection.promise().query(query, [tableName]);
+
+    return rows.length > 0 && rows[0][0] > 0;
+  } catch (error) {
+    console.error("Error checking if table exists:", error);
+    throw error;
+  }
+}
+
+// Function to create the nursery table
+async function createNurseryTable() {
+  try {
+    const createTableQuery = `
+      CREATE TABLE nursery (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        UserID INT,
+        p_id INT,
+        FOREIGN KEY (UserID) REFERENCES users(ID),
+        FOREIGN KEY (p_id) REFERENCES plants(p_id)
+      );
+    `;
+
+    // Execute the table creation query
+    await connection.promise().query(createTableQuery);
+  } catch (error) {
+    console.error("Error creating nursery table:", error);
+    throw error;
+  }
+}
+
+// Function to insert into the nursery table using a stored procedure
+async function insertIntoNursery(userId, plantId) {
+  try {
+    const insertProcedure = `
+      CREATE PROCEDURE InsertIntoNursery(IN p_userId INT, IN p_plantId INT)
+      BEGIN
+          INSERT INTO nursery (UserID, p_id)
+          VALUES (p_userId, p_plantId);
+      END;
+    `;
+
+    // Check if the procedure exists
+    const procedureExists = await checkIfProcedureExists("InsertIntoNursery");
+
+    if (!procedureExists) {
+      // Create the stored procedure
+      await connection.promise().query(insertProcedure);
+    }
+
+    // Call the stored procedure to insert into the nursery table
+    await connection
+      .promise()
+      .query("CALL InsertIntoNursery(?, ?)", [userId, plantId]);
+  } catch (error) {
+    console.error("Error inserting into nursery table:", error);
+    throw error;
+  }
+}
+
 // Function to check if a stored procedure exists
 // Function to check if a stored procedure exists
 async function checkIfProcedureExists(procedureName) {
