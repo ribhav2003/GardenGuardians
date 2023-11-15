@@ -63,8 +63,8 @@
 /* Add additional styles as needed */
 .search-bar-container {
   position: absolute;
-  top: -105px;
-  left: 64rem;
+  top: -80px;
+  left: 62rem;
   display: flex;
   align-items: center;
   background-color: #00ed64;
@@ -133,8 +133,9 @@
 }
 
 .add {
-  margin-left: 36rem;
+  margin-left: 55rem;
   margin-top: 1.4rem;
+  transform: translateY(25px);
   height: 3rem;
   width: 7rem;
   background-color: #00ed64;
@@ -144,6 +145,7 @@
   font-weight: bold;
   cursor: pointer;
   border-radius: 6px;
+  text-decoration: none;
 }
 
 .add:hover {
@@ -172,4 +174,25 @@
 
 .navbar #user:hover {
   color: #007bff;
+}
+
+/* Add this to your existing CSS code */
+.remove {
+  margin-left: 55rem;
+  /* margin-top: 1rem; */
+  margin-bottom: 1px;
+  transform: translateY(25px);
+  height: 3rem;
+  width: 7rem;
+  background-color: #ed0000;
+  outline: none;
+  border: 1px solid #680000;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.remove:hover {
+  border-radius: 60px;
 }

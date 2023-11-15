@@ -137,11 +137,68 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (data.success) {
         alert("Plant added to the nursery successfully!");
+        location.reload();
       } else {
         alert("Failed to add plant to the nursery. Please try again.");
       }
     } catch (error) {
       console.error("Error adding plant to nursery:", error);
+      alert("An error occurred. Please try again later.");
+    }
+  });
+
+  const removeButton = document.querySelector(".remove");
+
+  // Fetch the list of plants in the user's nursery
+  const nurseryPlantsResponse = await fetch(
+    `http://localhost:5503/getPlantsInNursery?userId=${uid}`
+  );
+  const nurseryPlantsData = await nurseryPlantsResponse.json();
+
+  console.log("Plant ID:", plantId);
+  console.log("Nursery Plants Data:", nurseryPlantsData);
+
+  // Check if the plant is in the nursery
+  const isInNursery = nurseryPlantsData.plants.some(
+    (nurseryPlant) => nurseryPlant.p_id === parseInt(plantId)
+  );
+
+  console.log("Is in nursery:", isInNursery);
+
+  // Show or hide the "Remove Plant" button based on whether the plant is in the nursery
+  if (isInNursery) {
+    removeButton.style.display = "block";
+    addButton.style.display = "none";
+  } else {
+    removeButton.style.display = "none";
+    addButton.style.display = "block";
+  }
+
+  // Add an event listener for the "Remove Plant" button
+  removeButton.addEventListener("click", async function () {
+    try {
+      const removeResponse = await fetch(
+        "http://localhost:5503/removeFromNursery",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: uid, plantId }),
+        }
+      );
+
+      const removeData = await removeResponse.json();
+
+      if (removeData.success) {
+        alert("Plant removed from the nursery successfully!");
+        // Redirect to the home page or any other appropriate page
+        window.location.href = "home.html";
+      } else {
+        alert("Failed to remove plant from the nursery. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error removing plant from the nursery:", error);
       alert("An error occurred. Please try again later.");
     }
   });

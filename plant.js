@@ -386,6 +386,58 @@ async function getPlantDetailsById(plantId) {
   }
 }
 
+// API endpoint for removing plants from the nursery
+app.post("/removeFromNursery", async (req, res) => {
+  const { userId, plantId } = req.body;
+
+  if (!userId || !plantId) {
+    return res.status(400).json({ error: "UserID and PlantID are required" });
+  }
+
+  try {
+    // Call the stored procedure to remove from the nursery table
+    await removeFromNursery(userId, plantId);
+
+    res.json({ success: true, message: "Plant removed from the nursery" });
+  } catch (error) {
+    console.error("Error removing plant from nursery:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Function to remove from the nursery table using a stored procedure
+async function removeFromNursery(userId, plantId) {
+  try {
+    const removeProcedure = `
+      CREATE PROCEDURE RemoveFromNursery(IN p_userId INT, IN p_plantId INT)
+      BEGIN
+          DELETE FROM nursery
+          WHERE UserID = p_userId AND p_id = p_plantId;
+      END;
+    `;
+
+    // Check if the procedure exists
+    const checkProcedureQuery =
+      "SHOW PROCEDURE STATUS LIKE 'RemoveFromNursery';";
+    const [procedureRows] = await connection
+      .promise()
+      .query(checkProcedureQuery);
+
+    if (procedureRows.length === 0) {
+      // Create the stored procedure
+      await connection.promise().query(removeProcedure);
+    }
+
+    // Call the stored procedure to remove from the nursery table
+    await connection
+      .promise()
+      .query("CALL RemoveFromNursery(?, ?)", [userId, plantId]);
+  } catch (error) {
+    console.error("Error removing from nursery table:", error);
+    throw error;
+  }
+}
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
