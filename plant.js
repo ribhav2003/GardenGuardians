@@ -280,7 +280,9 @@ async function createGetPlantsInNurseryProcedure() {
 BEGIN
     SELECT
         plants.p_id,
-        plants.common_name
+        plants.common_name,
+        plants.watering,
+        plants.sunlight
     FROM
         nursery
     JOIN plants ON
@@ -310,6 +312,8 @@ async function getPlantsInNursery(userId) {
       const plantsInNursery = rows[0].map((row) => ({
         p_id: row.p_id,
         common_name: row.common_name,
+        watering: row.watering,
+        sunlight: row.sunlight,
       }));
 
       return plantsInNursery;

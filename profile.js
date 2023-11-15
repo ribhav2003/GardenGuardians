@@ -11,15 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const logoutButton = document.getElementById("logoutButton");
 
-    logoutButton.addEventListener("click", function () {
-        // Perform logout actions, such as clearing local storage or redirecting to the login page
-        localStorage.removeItem("id");
-        localStorage.removeItem("usersd");
-        localStorage.removeItem("emaild");
+  logoutButton.addEventListener("click", function () {
+    // Perform logout actions, such as clearing local storage or redirecting to the login page
+    localStorage.removeItem("id");
+    localStorage.removeItem("usersd");
+    localStorage.removeItem("emaild");
 
-        // Redirect to the index page
-        window.location.href = "index.html";
-    });
+    // Redirect to the index page
+    window.location.href = "index.html";
+  });
 
   // Display username and email ID
   usernameElement.textContent = userd;
@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         `http://localhost:5503/getPlantsInNursery?userId=${userId}`
       );
       const data = await response.json();
+      console.log(data);
       return data.plants || [];
     } catch (error) {
       throw error;
