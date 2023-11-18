@@ -459,6 +459,132 @@ async function removeFromNursery(userId, plantId) {
   }
 }
 
+//
+
+// Procedure to create the log_activity table
+async function createLogActivityTable() {
+  try {
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS log_activity (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        uid INT  ,
+        plant_name VARCHAR(255) NOT NULL,
+        activity_date DATE ,
+        activity_time TIME 
+      );
+    `;
+
+    // Execute the table creation query
+    await connection.promise().query(createTableQuery);
+    console.log("log_activity table created successfully");
+  } catch (error) {
+    console.error("Error creating log_activity table:", error);
+    throw error;
+  }
+}
+
+createLogActivityTable();
+// Function to log activity
+// Function to log activity
+async function logActivity(uid, plantName) {
+  try {
+    const logActivityQuery = `
+      INSERT INTO log_activity (uid, plant_name, activity_date, activity_time)
+      VALUES (?, ?, curdate(),curtime());
+    `;
+
+    // Execute the query to log the activity
+    await connection.promise().query(logActivityQuery, [uid, plantName]);
+    console.log(`Activity logged for ${plantName} at ${new Date()}`);
+  } catch (error) {
+    console.error("Error logging activity:", error);
+
+    // Log additional information for troubleshooting
+    if (error.code === "ER_TRUNCATED_WRONG_VALUE") {
+      console.error(
+        "This error may occur if the data you're trying to insert does not match the column types in the log_activity table."
+      );
+    }
+
+    // Send the error message to the client for better debugging
+    throw new Error("Internal server error: Unable to log activity");
+  }
+}
+
+// API endpoint for logging activity
+app.post("/logActivity", async (req, res) => {
+  const { uid, plantName } = req.body;
+
+  if (!uid || !plantName) {
+    return res
+      .status(400)
+      .json({ error: "User ID and plant name are required" });
+  }
+
+  try {
+    // Call the logActivity function to log the activity
+    await logActivity(uid, plantName);
+
+    res.json({ success: true, message: "Activity logged successfully" });
+  } catch (error) {
+    console.error("Error logging activity:", error);
+    res.status(500).json({ error: error.message }); // Send the detailed error message to the client
+  }
+});
+
+async function getActivityLogs(userId, plantName) {
+  const query =
+    "SELECT * FROM log_activity WHERE uid = ? AND plant_name = ? ORDER BY activity_timestamp DESC";
+  const params = [userId, plantName];
+
+  try {
+    const [rows] = await connection.promise().query(query, params);
+
+    if (rows.length > 0) {
+      const activityLogs = rows.map((row) => ({
+        id: row.id,
+        uid: row.uid,
+        plant_name: row.plant_name,
+        activity_timestamp: row.activity_timestamp,
+      }));
+
+      return activityLogs;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+
+// API endpoint to get activity logs for a specific user and plant name
+app.get("/getActivityLogs", async (req, res) => {
+  const userId = req.query.userId;
+  const plantName = req.query.plantName;
+
+  if (!userId || !plantName) {
+    return res
+      .status(400)
+      .json({ error: "User ID and plant name are required" });
+  }
+
+  try {
+    // Fetch activity logs for the user and plant name from the log_activity table
+    const logsQuery =
+      "SELECT * FROM log_activity WHERE uid = ? AND plant_name = ?";
+    const [logs] = await connection
+      .promise()
+      .query(logsQuery, [userId, plantName]);
+
+    // Return the activity logs as JSON
+    res.json({ activityLogs: logs });
+  } catch (error) {
+    console.error("Error fetching activity logs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

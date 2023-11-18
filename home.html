@@ -37,6 +37,14 @@
             <ul id="plantList"></ul>
         </div>
     </div>
+
+    <div id="activityLogModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeLogModalButton">&times;</span>
+            <h2>Activity Log</h2>
+            <ul id="activityLogList"></ul>
+        </div>
+    </div>
     <!-- Add this inside the <body> tag -->
     <div id="tipsModal" class="modal">
 
@@ -46,7 +54,21 @@
             <p id="tipsContent"></p>
         </div>
     </div>
+    <div class="act">
+        <button id="addActivityButton" class="addActivityButton">Add Activity</button>
 
+        <div id="activityPopup" style="display: none;">
+            <label for="plantDropdown" class="txt">Select Plant:</label>
+            <select id="plantDropdown">
+                <!-- Populate this dropdown dynamically with plants from the user's nursery -->
+                <option value="plant1">Plant 1</option>
+                <option value="plant2">Plant 2</option>
+                <!-- Add more options as needed -->
+            </select>
+
+            <button id="logActivityButton">Log Activity</button>
+        </div>
+    </div>
     <!-- <div class="nursery-container">
         <h2>Nursery</h2>
         <ul id="plantList"></ul>
