@@ -6,6 +6,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   console.log(userd);
   console.log(emailsd);
   console.log(uid);
+  // try {
+  //   const response = await fetch(
+  //     `http://localhost:5503/checkAndCreateNurseryTable?userId=${uid}`
+  //   );
+  //   const data = await response.json();
+
+  //   if (data.success) {
+  //     console.log("Nursery table check completed");
+  //   } else {
+  //     console.error("Failed to check and create the nursery table");
+  //   }
+  // } catch (error) {
+  //   console.error("Error checking and creating nursery table:", error);
+  // }
   const commonNameElement = document.getElementById("commonName");
   const scientificNameElement = document.getElementById("scientificName");
   const cycleElement = document.getElementById("cycle");
@@ -17,6 +31,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Redirect to the profile page (replace "profile.html" with your actual profile page)
     window.location.href = "profile.html";
   });
+
   const searchBarContainerEl = document.querySelector(".search-bar-container");
   const searchInputEl = document.querySelector(".input");
   const searchResultsEl = document.getElementById("searchResults");

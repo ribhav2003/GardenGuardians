@@ -84,9 +84,28 @@ app.get("/getPlantDetails", async (req, res) => {
   }
 });
 
+app.get("/checkAndCreateNurseryTable", async (req, res) => {
+  const uid = req.query.userId;
+  try {
+    // Check if the nursery table exists
+    const tableExists = "SHOW table STATUS LIKE 'nursery';";
+    const [tableRows] = await connection.promise().query(tableExists);
+    // const procedureExists = await checkIfProcedureExists("GetPlantDetailsById");
+
+    if (tableRows.length === 0) {
+      // Create the stored procedure
+      await createNurseryTable();
+    }
+
+    res.json({ success: true, message: "Nursery table check completed" });
+  } catch (error) {
+    console.error("Error checking and creating nursery table:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // API endpoint for adding plants to the nursery
 // ...
-
 // API endpoint for adding plants to the nursery
 app.post("/addToNursery", async (req, res) => {
   const { userId, plantId } = req.body;
@@ -151,6 +170,7 @@ async function createNurseryTable() {
       CREATE TABLE nursery (
         UserID INT,
         p_id INT,
+        timeAdded TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (UserID, p_id),
         FOREIGN KEY (UserID) REFERENCES users(ID),
         FOREIGN KEY (p_id) REFERENCES plants(p_id)
@@ -253,6 +273,7 @@ app.get("/getPlantsInNursery", async (req, res) => {
       // Create the stored procedure
       await createGetPlantsInNurseryProcedure();
     }
+
     // Check if the stored procedure exists
     // const procedureExists = await checkIfProcedureExists("GetPlantsInNursery");
 
@@ -262,7 +283,7 @@ app.get("/getPlantsInNursery", async (req, res) => {
     // }
 
     // Call the stored procedure to get plants in the nursery
-    const plantsInNursery = await getPlantsInNursery(userId);
+    const plantsInNursery = await gettPlantsInNursery(userId);
 
     // Send the plant information
     res.json({ plants: plantsInNursery });
@@ -301,7 +322,7 @@ END;
 }
 
 // Function to get plants in the user's nursery using the stored procedure
-async function getPlantsInNursery(userId) {
+async function gettPlantsInNursery(userId) {
   const query = "CALL GetPlantsInNursery(?)";
   const params = [userId];
 
