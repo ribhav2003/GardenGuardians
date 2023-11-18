@@ -5,7 +5,7 @@ const mysql = require("mysql2/promise"); // Import the mysql2 promise-based libr
 const db = mysql.createPool({
   host: "localhost",
   user: "root", // Replace with your MySQL username
-  password: "root", // Replace with your MySQL password
+  password: "tiger", // Replace with your MySQL password
   database: "plant_care",
   waitForConnections: true,
   connectionLimit: 10,

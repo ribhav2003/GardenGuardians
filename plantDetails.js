@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Redirect to the profile page (replace "profile.html" with your actual profile page)
     window.location.href = "profile.html";
   });
-
   const searchBarContainerEl = document.querySelector(".search-bar-container");
   const searchInputEl = document.querySelector(".input");
   const searchResultsEl = document.getElementById("searchResults");
