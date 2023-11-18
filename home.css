@@ -134,3 +134,163 @@
 .navbar #user:hover {
   color: #007bff;
 }
+
+.profile-container {
+  max-width: 600px;
+  margin: 50px auto;
+  margin-top: 10rem;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container h1,
+h2,
+h3 {
+  color: #333;
+  font-family: Euclid Circular A;
+  margin-bottom: 1.4rem;
+}
+
+.profile-container h2 {
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.profile-container div {
+  margin-bottom: 20px;
+}
+
+.profile-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.profile-container li {
+  margin-bottom: 10px;
+}
+
+/* Add/modify these styles in your existing CSS code */
+.plant-number {
+  font-family: Value Serif Pro Regular;
+  font-weight: bold;
+  margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.plant-details {
+  font-family: Value Serif Pro Regular;
+  display: flex;
+  align-items: center;
+}
+
+/* Add/modify these styles in your existing CSS code */
+.plant-details {
+  display: flex;
+  justify-content: space-between; /* Align items and button at the ends */
+  align-items: center;
+}
+
+.tips-button {
+  background-color: #ffffff; /* White background */
+  color: #00ed64; /* Green text color */
+  border: 2px solid #00ed64; /* Green border */
+  padding: 8px 15px; /* Adjust padding as needed */
+  border-radius: 5px; /* Add rounded corners */
+  cursor: pointer;
+}
+
+.tips-button:hover {
+  background-color: #00ed64; /* Change background color on hover */
+  color: #ffffff; /* Change text color on hover */
+}
+
+/* Add this to your CSS */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#tipsContent {
+  font-family: "Euclid Circular A"; /* Use the desired font */
+  color: #333; /* Set text color */
+  line-height: 1.6; /* Adjust line height as needed */
+}
+
+/* Add styles for the tips container and content */
+.tips-container {
+  max-width: 600px; /* Adjust the max width as needed */
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.tips-content {
+  /* Add additional styling for the tips content */
+}
+/* Add this to your CSS */
+.preloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 1;
+}
+
+.preloader::after {
+  content: "";
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #00ed64;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

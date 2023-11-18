@@ -31,13 +31,33 @@
     <div class="welcome-box">
         Welcome, <span id="username"></span>!
     </div>
+    <div class="profile-container">
+        <h1>Plants in Nursery</h1>
+        <div>
+            <ul id="plantList"></ul>
+        </div>
+    </div>
+    <!-- Add this inside the <body> tag -->
+    <div id="tipsModal" class="modal">
 
-    <div class="nursery-container">
+        <div class="modal-content">
+            <span class="close" onclick="closeTipsModal()" id="closeModalButton">&times;</span>
+            <h2>Plant Care Tips</h2>
+            <p id="tipsContent"></p>
+        </div>
+    </div>
+
+    <!-- <div class="nursery-container">
         <h2>Nursery</h2>
         <ul id="plantList"></ul>
+    </div> -->
+    <div id="preloader" class="preloader" style="display: none">
+        <div class="loader"></div>
     </div>
     <script src="home.js"></script>
     <script src="https://kit.fontawesome.com/7daae4d489.js" crossorigin="anonymous"></script>
+    <!-- Add this in the <head> section of your HTML file -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 
 </html>

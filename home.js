@@ -1,6 +1,9 @@
-document.addEventListener("DOMContentLoaded", function () {
+// const { Json } = require("sequelize/types/utils");
 
-  const uid=JSON.parse(localStorage.getItem('id'));
+// const axios = require("axios");
+document.addEventListener("DOMContentLoaded", function () {
+  // const axios = require("axios");
+  const uid = JSON.parse(localStorage.getItem("id"));
   // Existing code for fetching and displaying the list of plants in the nursery
   fetchPlantsInNursery(uid)
     .then((plants) => {
@@ -26,10 +29,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Function to display the list of plants in the nursery
+  // Function to display the list of plants in the nursery
   function displayPlantsInNursery(plants) {
     const plantListElement = document.getElementById("plantList");
 
-    plants.forEach((plant) => {
+    plants.forEach((plant, index) => {
       // Create a list item for each plant
       const listItem = document.createElement("li");
 
@@ -37,30 +41,37 @@ document.addEventListener("DOMContentLoaded", function () {
       const plantDetailsDiv = document.createElement("div");
       plantDetailsDiv.classList.add("plant-details");
 
+      // Display plant number
+      const plantNumber = document.createElement("span");
+      plantNumber.textContent = `${index + 1}. `;
+      plantNumber.classList.add("plant-number");
+      plantDetailsDiv.appendChild(plantNumber);
+
       // Display plant name
       const plantName = document.createElement("h3");
       plantName.textContent = plant.common_name;
       plantDetailsDiv.appendChild(plantName);
-      // const response = fetch(
-      //   `http://localhost:5503/getPlantDetails?plantId=${plantId}`
-      // );
-      // const data=response.json();
 
-      // Display watering schedule
-      const wateringSchedule = document.createElement("p");
-      wateringSchedule.textContent = `Watering Schedule: ${plant.watering}`;
-      plantDetailsDiv.appendChild(wateringSchedule);
+      // Create a button for viewing tips
+      const tipsButton = document.createElement("button");
+      tipsButton.textContent = "Click to View Tips";
+      tipsButton.classList.add("tips-button");
 
-      // Display sunlight requirement
-      const sunlightRequirement = document.createElement("p");
-      sunlightRequirement.textContent = `Sunlight Requirement: ${plant.sunlight}`;//check1
-      plantDetailsDiv.appendChild(sunlightRequirement);
+      // Add a click event listener to handle button click
+      tipsButton.addEventListener("click", function () {
+        // Handle the button click, e.g., show tips or navigate to tips page
+        console.log(`View tips for plant ${plant.common_name}`);
+        openTipsModal(plant.common_name, plant.watering, plant.sunlight);
+      });
+
+      // Append the button to the plant details div
+      plantDetailsDiv.appendChild(tipsButton);
 
       // Add a click event listener to redirect to the plant details page
-      listItem.addEventListener("click", function () {
-        // Redirect to the plant details page with the plant ID
-        window.location.href = `/plantDetails.html?id=${plant.p_id}`;
-      });
+      // listItem.addEventListener("click", function () {
+      //   // Redirect to the plant details page with the plant ID
+      //   window.location.href = `/plantDetails.html?id=${plant.p_id}`;
+      // });
 
       // Append the plant details div to the list item
       listItem.appendChild(plantDetailsDiv);
@@ -139,4 +150,108 @@ document.addEventListener("DOMContentLoaded", function () {
   magnifierEl.addEventListener("click", () => {
     searchBarContainerEl.classList.toggle("active");
   });
+
+  // Add these functions to home.js
+  function openTipsModal(plantName, watering, sunlight) {
+    const tipsModal = document.getElementById("tipsModal");
+    tipsModal.style.display = "block";
+
+    // Use the provided query to fetch tips
+    const query = `generate Plant Care Tips for ${plantName}, has watering needs: ${watering} and sunlight needs: ${sunlight}`;
+    console.log(query);
+    fetchPlantTips(query);
+  }
+
+  function closeTipsModal() {
+    const tipsModal = document.getElementById("tipsModal");
+    // tipsModal.innerHTML="";
+    tipsModal.style.display = "none";
+  }
+  document
+    .getElementById("closeModalButton")
+    .addEventListener("click", closeTipsModal);
+  async function fetchPlantTips(query) {
+    const tipsModal = document.getElementById("tipsModal");
+    const preloader = document.createElement("div");
+    preloader.classList.add("preloader");
+    tipsModal.appendChild(preloader);
+    const options = {
+      method: "POST",
+      url: "https://chatgpt-api7.p.rapidapi.com/ask",
+      headers: {
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "5bad4eab10msh33670bf2437cebbp10e966jsn5bb9a8d32eb1",
+        "X-RapidAPI-Host": "chatgpt-api7.p.rapidapi.com",
+      },
+      data: {
+        query: `${query}`,
+      },
+    };
+
+    try {
+      const response = await axios.request(options);
+      console.log(response.data);
+      // const response = await axios.post(
+      //   "https://chatgpt-api7.p.rapidapi.com/ask",
+      //   { query },
+      //   {
+      //     headers: {
+      //       "content-type": "application/json",
+      //       "X-RapidAPI-Key":
+      //         "5bad4eab10msh33670bf2437cebbp10e966jsn5bb9a8d32eb1",
+      //       "X-RapidAPI-Host": "chatgpt-api7.p.rapidapi.com",
+      //     },
+      //   }
+      // );
+      // const goodResponse = JSON.parse(response.data);
+      const cleanedResponse = response.data.response.replace(/^AI:/, "");
+      const tipsContent = document.getElementById("tipsContent");
+      tipsContent.innerHTML = formatTips(cleanedResponse);
+      preloader.remove();
+      // Check if the response has data and content
+      // if (
+      //   response.data &&
+      //   response.data.data &&
+      //   response.data.data.length > 0
+      // ) {
+      //   // Extract and display tips in the modal
+      //   const tipsContent = document.getElementById("tipsContent");
+      //   tipsContent.innerHTML = response.data.data[0].content;
+      // } else {
+      //   console.error("No data or content in the response");
+      // }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  document
+    .getElementById("tipsModal")
+    .addEventListener("click", function (event) {
+      if (
+        event.target.id === "tipsModal" ||
+        event.target.classList.contains("close")
+      ) {
+        closeTipsModal();
+      }
+    });
+  function beautifyTips(tips) {
+    // Add styling to the tips content as needed
+    return `
+    <div class="tips-container">
+      <h3>Plant Care Tips</h3>
+      <div class="tips-content">${tips}</div>
+    </div>
+  `;
+  }
+  function formatTips(tips) {
+    const tipsArray = tips.split("\n").filter((line) => line.trim() !== "");
+
+    if (tipsArray.length === 0) {
+      return "No tips available.";
+    }
+
+    const formattedTips = tipsArray.map((tip, index) => `${tip}`).join("<br>");
+
+    return formattedTips;
+  }
 });
