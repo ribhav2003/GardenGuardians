@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const data = await response.json();
       console.log(data);
+      updatePlantDropdown(data.plants); 
       return data.plants || [];
     } catch (error) {
       throw error;
@@ -254,4 +255,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return formattedTips;
   }
+
+  document.getElementById('addActivityButton').addEventListener('click', function() {
+    // Show the popup
+    document.getElementById('activityPopup').style.display = 'block';
+
+    // Fetch the user's nursery data and populate the dropdown
+    fetchPlantsInNursery(uid)
+  });
+
+  document.getElementById('logActivityButton').addEventListener('click', function() {
+    const uid = JSON.parse(localStorage.getItem("id"));
+    var selectedPlant = document.getElementById('plantDropdown').value;
+  
+    // Create data object with the selected plant
+    var data = {
+      uid: uid,
+      plantName: selectedPlant
+    };
+  
+    // Use axios for making the POST request
+    axios.post('http://localhost:5503/logActivity', data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        // Log success message
+        console.log(response.data.message);
+  
+        // Hide the popup
+        document.getElementById('activityPopup').style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle error, show error message, etc.
+      });
+  })
+
+
+  function updatePlantDropdown(plants) {
+    var dropdown = document.getElementById('plantDropdown');
+
+    // Clear existing options
+    dropdown.innerHTML = '';
+
+    // Add new options based on user's nursery data
+    plants.forEach(plant => {
+      var option = document.createElement('option');
+      option.value = plant.common_name; // Assuming each plant has a unique identifier
+      option.text = plant.common_name; // Replace with the property that represents the plant's name
+      dropdown.add(option);
+    });
+  }
+
+
+
+
+
 });

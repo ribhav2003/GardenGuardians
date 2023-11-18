@@ -15,7 +15,7 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root", // Replace with your MySQL password
+  password: "tiger", // Replace with your MySQL password
   database: "plant_care",
 });
 
@@ -458,6 +458,81 @@ async function removeFromNursery(userId, plantId) {
     throw error;
   }
 }
+
+
+//
+
+// Procedure to create the log_activity table
+async function createLogActivityTable() {
+  try {
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS log_activity (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        uid INT  ,
+        plant_name VARCHAR(255) NOT NULL,
+        activity_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+
+    // Execute the table creation query
+    await connection.promise().query(createTableQuery);
+    console.log("log_activity table created successfully");
+  } catch (error) {
+    console.error("Error creating log_activity table:", error);
+    throw error;
+  }
+}
+
+createLogActivityTable();
+// Function to log activity
+// Function to log activity
+async function logActivity(uid, plantName) {
+  try {
+    const logActivityQuery = `
+      INSERT INTO log_activity (uid, plant_name)
+      VALUES (?, ?);
+    `;
+
+    // Execute the query to log the activity
+    await connection.promise().query(logActivityQuery, [uid, plantName]);
+    console.log(`Activity logged for ${plantName} at ${new Date()}`);
+  } catch (error) {
+    console.error("Error logging activity:", error);
+
+    // Log additional information for troubleshooting
+    if (error.code === "ER_TRUNCATED_WRONG_VALUE") {
+      console.error(
+        "This error may occur if the data you're trying to insert does not match the column types in the log_activity table."
+      );
+    }
+
+    // Send the error message to the client for better debugging
+    throw new Error("Internal server error: Unable to log activity");
+  }
+}
+
+// API endpoint for logging activity
+app.post("/logActivity", async (req, res) => {
+  const { uid, plantName } = req.body;
+
+  if (!uid || !plantName) {
+    return res.status(400).json({ error: "User ID and plant name are required" });
+  }
+
+  try {
+    // Call the logActivity function to log the activity
+    await logActivity(uid, plantName);
+
+    res.json({ success: true, message: "Activity logged successfully" });
+  } catch (error) {
+    console.error("Error logging activity:", error);
+    res.status(500).json({ error: error.message }); // Send the detailed error message to the client
+  }
+});
+
+
+
+
 
 // Start the server
 app.listen(port, () => {
