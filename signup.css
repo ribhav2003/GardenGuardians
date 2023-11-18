@@ -441,3 +441,29 @@ body {
   transform: translateY(10px);
   opacity: 1;
 }
+
+.result-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.result-box.success {
+  background-color: #00ed64;
+  color: #ffffff;
+  border-color: #00ed64;
+}
+
+.result-box.error {
+  background-color: #ff0033;
+  color: #ffffff;
+  border-color: #ff0033;
+}
