@@ -68,6 +68,21 @@ document.addEventListener("DOMContentLoaded", function () {
       // Append the button to the plant details div
       plantDetailsDiv.appendChild(tipsButton);
 
+      // Create a button for viewing activity log
+      const viewActivityLogButton = document.createElement("button");
+      viewActivityLogButton.textContent = "View Activity Log";
+      viewActivityLogButton.classList.add("view-activity-log-button");
+
+      // Add a click event listener to handle button click
+      viewActivityLogButton.addEventListener("click", function () {
+          // Handle the button click, e.g., navigate to activity log page for the specific plant
+          console.log(uid,plant.common_name);
+          openActivityLog(uid, plant.common_name);
+      });
+
+      // Append the button to the plant details div
+      plantDetailsDiv.appendChild(viewActivityLogButton);
+
       // Add a click event listener to redirect to the plant details page
       // listItem.addEventListener("click", function () {
       //   // Redirect to the plant details page with the plant ID
@@ -309,7 +324,79 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Update the function to fetch activity logs
+async function fetchActivityLogs(userId, plantName) {
+  try {
+    const response = await fetch(`http://localhost:5503/getActivityLogs?userId=${userId}&plantName=${plantName}`);
+    const data = await response.json();
 
+    if (data.activityLogs && data.activityLogs.length > 0) {
+      console.log(data.activityLogs);
+      //displayActivityLogs(data.activityLogs);
+      return data.activityLogs;
+    } else {
+      console.log("No activity logs found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching activity logs:", error);
+    throw error;
+  }
+}
+
+
+
+function openActivityLog(userId, plantName) {
+  // Fetch activity logs for the specific user and plants
+  fetchActivityLogs(userId, plantName)
+    .then((activityLogs) => {
+      displayActivityLogsInPopup(activityLogs);
+      // Show the popup
+      document.getElementById("activityLogModal").style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Error fetching and displaying activity logs:", error);
+    });
+}
+
+function closeActivityLogModal() {
+  const activityLogModal = document.getElementById("activityLogModal");
+  activityLogModal.style.display = "none";
+}
+
+// Add a click event listener to close the activity log modal
+document.getElementById("closeLogModalButton").addEventListener("click", closeActivityLogModal);
+document.getElementById("activityLogModal").addEventListener("click", function (event) {
+  if (event.target.id === "activityLogModal" || event.target.classList.contains("close")) {
+      closeActivityLogModal();
+  }
+});
+
+function displayActivityLogsInPopup(activityLogs) {
+  const activityLogList = document.getElementById("activityLogList");
+
+  // Clear existing content
+  activityLogList.innerHTML = "";
+
+  if (activityLogs.length > 0) {
+    activityLogs.forEach((log) => {
+      const logItem = document.createElement("li");
+      const localDate = new Date(log.activity_date);
+      const formattedDate = localDate.toLocaleString('en-US', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        
+      });
+      logItem.textContent = `${log.plant_name} - ${formattedDate} - ${log.activity_time}   `;
+      activityLogList.appendChild(logItem);
+    });
+  } else {
+    const noLogsMessage = document.createElement("li");
+    noLogsMessage.textContent = "No activity logs found.";
+    activityLogList.appendChild(noLogsMessage);
+  }
+}
 
 
 
