@@ -41,3 +41,4 @@ Before you begin, ensure you have the following installed:
 - If you encounter any issues, check the console logs for error messages.
 
 **Happy gardening!**
+# newgg
