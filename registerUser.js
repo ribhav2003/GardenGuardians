@@ -48,23 +48,15 @@ connection.query("CREATE DATABASE IF NOT EXISTS plant_care", (err) => {
 
         console.log("Table 'users' is ready");
 
+        // Create "before insert" triggers
+        createUsernameTrigger();
+        createEmailTrigger();
+
         // Continue with the rest of your code here
 
         // API endpoint for user registration
         app.post("/register", async (req, res) => {
           const { username, email, password } = req.body;
-
-          // Check if username already exists
-          const usernameCheck = await usernameExists(username);
-          if (usernameCheck) {
-            return res.status(400).json({ error: "Username already exists" });
-          }
-
-          // Check if email already exists
-          const emailCheck = await emailExists(email);
-          if (emailCheck) {
-            return res.status(400).json({ error: "Email already exists" });
-          }
 
           const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -88,34 +80,6 @@ connection.query("CREATE DATABASE IF NOT EXISTS plant_care", (err) => {
           );
         });
 
-        // Helper function to check if a username exists
-        function usernameExists(username) {
-          return new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM users WHERE username = ?";
-            connection.query(sql, [username], (err, results) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(results.length > 0);
-              }
-            });
-          });
-        }
-
-        // Helper function to check if an email exists
-        function emailExists(email) {
-          return new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM users WHERE email = ?";
-            connection.query(sql, [email], (err, results) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(results.length > 0);
-              }
-            });
-          });
-        }
-
         // Start the server
         app.listen(port, () => {
           console.log(`Server is running on http://localhost:${port}`);
@@ -124,3 +88,53 @@ connection.query("CREATE DATABASE IF NOT EXISTS plant_care", (err) => {
     );
   });
 });
+
+// Helper function to create a "before insert" trigger for username
+function createUsernameTrigger() {
+  const triggerSql = `
+    CREATE TRIGGER before_insert_username
+    BEFORE INSERT ON users
+    FOR EACH ROW
+    BEGIN
+      DECLARE username_count INT;
+      SELECT COUNT(*) INTO username_count FROM users WHERE username = NEW.username;
+      IF username_count > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Username already exists';
+      END IF;
+    END;
+  `;
+
+  connection.query(triggerSql, (err) => {
+    if (err) {
+      console.error("Error creating username trigger:", err);
+    } else {
+      console.log("Username trigger created successfully");
+    }
+  });
+}
+
+// Helper function to create a "before insert" trigger for email
+function createEmailTrigger() {
+  const triggerSql = `
+    CREATE TRIGGER before_insert_email
+    BEFORE INSERT ON users
+    FOR EACH ROW
+    BEGIN
+      DECLARE email_count INT;
+      SELECT COUNT(*) INTO email_count FROM users WHERE email = NEW.email;
+      IF email_count > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Email already exists';
+      END IF;
+    END;
+  `;
+
+  connection.query(triggerSql, (err) => {
+    if (err) {
+      console.error("Error creating email trigger:", err);
+    } else {
+      console.log("Email trigger created successfully");
+    }
+  });
+}

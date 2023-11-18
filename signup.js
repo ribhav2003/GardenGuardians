@@ -131,12 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Show error message and change background color to red
             showResult("Registration Failed: Something went wrong", "error");
-
-            // Redirect to signup.html after 3 seconds
-            setTimeout(() => {
-              window.location.href = "signup.html";
-            }, 3000);
           }
+          throw new Error("Registration failed");
         }
         return response.json();
       })
@@ -158,9 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         // Handle network or other unexpected errors
         console.error("Error:", error);
-
-        // Show error message and change background color to red
-        showResult("Registration Failed: Something went wrong", "error");
 
         // Redirect to signup.html after 3 seconds
         setTimeout(() => {
