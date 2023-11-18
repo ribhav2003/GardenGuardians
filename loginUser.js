@@ -28,7 +28,7 @@ app.use(
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "tiger",
+  password: "ribhav22",
   database: "plant_care",
 });
 

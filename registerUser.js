@@ -15,7 +15,7 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "tiger", // Replace with your MySQL password
+  password: "ribhav22", // Replace with your MySQL password
 });
 
 // Create the "plant_care" database if it doesn't exist
