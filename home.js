@@ -273,15 +273,15 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", function () {
       // Show the popup
       document.getElementById("activityPopup").style.display = "block";
-      Push.create("Reminder 🌱!", {
-        body: `Please water. It needs your attention 🥺🥺`,
-        icon: "Images/favicon.ico",
-        timeout: 5000,
-        onClick: function () {
-          window.focus();
-          this.close();
-        },
-      });
+      // Push.create("Reminder 🌱!", {
+      //   body: `Please water. It needs your attention 🥺🥺`,
+      //   icon: "Images/favicon.ico",
+      //   timeout: 5000,
+      //   onClick: function () {
+      //     window.focus();
+      //     this.close();
+      //   },
+      // });
       // Fetch the user's nursery data and populate the dropdown
       fetchPlantsInNursery(uid);
     });
