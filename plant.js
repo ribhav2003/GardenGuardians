@@ -141,6 +141,106 @@ app.post("/addToNursery", async (req, res) => {
   }
 });
 
+// API endpoint to check if a notification is needed for a specific plant
+app.get("/api/plants/:plantId/needsNotification", async (req, res) => {
+  const plantId = req.params.plantId;
+
+  try {
+    const checkfunctionQuery =
+      "SHOW function STATUS LIKE 'NeedsWateringNotification';";
+    const [functionRows] = await connection.promise().query(checkfunctionQuery);
+    // const procedureExists = await checkIfProcedureExists("GetPlantDetailsById");
+
+    if (functionRows.length === 0) {
+      // Create the stored procedure
+      //  await connection.promise().query(insertProcedure);
+      await createNeedsWateringNotificationFunction();
+    }
+
+    // Fetch the plant's watering frequency
+    // const [rows] = await connection
+    //   .promise()
+    //   .query('SELECT watering FROM plants WHERE p_id = ?', [plantId]);
+
+    // const wateringFrequency = rows[0].watering;
+
+    // Use the stored function to determine if a notification is needed
+    const [result] = await connection
+      .promise()
+      .query("SELECT NeedsWateringNotification(?) AS needs_notification", [
+        plantId,
+        // wateringFrequency,
+      ]);
+
+    const needsNotification = result[0].needs_notification;
+
+    res.json({ needsNotification });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+async function createNeedsWateringNotificationFunction() {
+  try {
+    const createFunctionQuery = `
+      CREATE FUNCTION NeedsWateringNotification(p_plantId INT) RETURNS BOOLEAN
+      DETERMINISTIC
+      BEGIN
+          DECLARE lastActivityDate DATE;
+          DECLARE currentDate DATE;
+          DECLARE notificationNeeded BOOLEAN;
+          DECLARE plantWatering VARCHAR(50);
+          DECLARE plantName VARCHAR(50);
+
+          -- Get the watering frequency for the plant from the 'plants' table
+          SELECT watering INTO plantWatering
+          FROM plants
+          WHERE p_id = p_plantId;
+
+          SELECT common_name INTO plantName
+          FROM plants
+          WHERE p_id = p_plantId;
+
+          -- If watering frequency is not found, default to 'Minimum'
+          IF plantWatering IS NULL THEN
+              SET plantWatering = 'Minimum';
+          END IF;
+
+          -- Get the last activity date for the plant
+          SELECT MAX(activity_date) INTO lastActivityDate
+          FROM log_activity
+          WHERE uid = 1 AND plant_name = plantName;
+
+          -- Get the current date
+          SET currentDate = CURDATE();
+
+          -- Determine if a notification is needed based on the watering frequency
+          CASE
+              WHEN plantWatering = 'Frequent' THEN
+                  SET notificationNeeded = DATEDIFF(currentDate, lastActivityDate) >= 1;
+              WHEN plantWatering = 'Average' THEN
+                  SET notificationNeeded = DATEDIFF(currentDate, lastActivityDate) >= 3;
+              WHEN plantWatering = 'Minimum' THEN
+                  SET notificationNeeded = DATEDIFF(currentDate, lastActivityDate) >= 7;
+              ELSE
+                  SET notificationNeeded = FALSE; -- Default to false if watering frequency is unknown
+          END CASE;
+
+          RETURN notificationNeeded;
+      END;
+    `;
+
+    await connection.promise().query(createFunctionQuery);
+    console.log("NeedsWateringNotification function created successfully");
+  } catch (error) {
+    console.error("Error creating NeedsWateringNotification function:", error);
+    throw error;
+  }
+}
+
+// Call the helper function to create the SQL function
+
 // Function to check if a table exists
 async function checkIfTableExists(tableName) {
   try {

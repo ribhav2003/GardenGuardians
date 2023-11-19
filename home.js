@@ -1,14 +1,11 @@
-// const { Json } = require("sequelize/types/utils");
-
-// const axios = require("axios");
 document.addEventListener("DOMContentLoaded", function () {
-  // const axios = require("axios");
   const uid = JSON.parse(localStorage.getItem("id"));
+
   // Existing code for fetching and displaying the list of plants in the nursery
   fetchPlantsInNursery(uid)
-    .then((plants) => {
+    .then(async (plants) => {
       // Display the list of plants in the nursery
-      displayPlantsInNursery(plants);
+      await displayPlantsInNursery(plants);
     })
     .catch((error) => {
       console.error("Error fetching plants in nursery:", error);
@@ -30,11 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Function to display the list of plants in the nursery
-  // Function to display the list of plants in the nursery
-  function displayPlantsInNursery(plants) {
+  async function displayPlantsInNursery(plants) {
     const plantListElement = document.getElementById("plantList");
 
-    plants.forEach((plant, index) => {
+    for (const plant of plants) {
       // Create a list item for each plant
       const listItem = document.createElement("li");
 
@@ -44,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Display plant number
       const plantNumber = document.createElement("span");
-      plantNumber.textContent = `${index + 1}. `;
+      plantNumber.textContent = `${plants.indexOf(plant) + 1}. `;
       plantNumber.classList.add("plant-number");
       plantDetailsDiv.appendChild(plantNumber);
 
@@ -94,7 +90,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Append the list item to the plant list
       plantListElement.appendChild(listItem);
-    });
+
+      try {
+        const response = await fetch(
+          `http://localhost:5503/api/plants/${plant.p_id}/needsNotification`
+        );
+        const data = await response.json();
+        const needsNotification = data.needsNotification;
+        console.log("Hi!");
+        // Use the needsNotification value as needed (for example, display an icon)
+        if (needsNotification) {
+          console.log(`Plant ${plant.common_name} needs notification!`);
+          document.getElementById("activityPopup").style.display = "block";
+          Push.create("Reminder 🌱!", {
+            body: `Please water. It needs your attention 🥺🥺`,
+            icon: "Images/favicon.ico",
+            timeout: 5000,
+            onClick: function () {
+              window.focus();
+              this.close();
+            },
+          });
+          // Add your logic here to handle the notification (e.g., display an icon)
+        }
+      } catch (error) {
+        console.error("Error checking needs notification:", error);
+      }
+    }
   }
 
   const welcomeMessageElement = document.getElementById("username");
@@ -251,10 +273,10 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", function () {
       // Show the popup
       document.getElementById("activityPopup").style.display = "block";
-      Push.create("Hello world!", {
-        body: "How's it hangin'?",
-        icon: "/icon.png",
-        timeout: 4000,
+      Push.create("Reminder 🌱!", {
+        body: `Please water. It needs your attention 🥺🥺`,
+        icon: "Images/favicon.ico",
+        timeout: 5000,
         onClick: function () {
           window.focus();
           this.close();
