@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const data = await response.json();
       console.log(data);
-      updatePlantDropdown(data.plants); 
+      updatePlantDropdown(data.plants);
       return data.plants || [];
     } catch (error) {
       throw error;
@@ -75,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Add a click event listener to handle button click
       viewActivityLogButton.addEventListener("click", function () {
-          // Handle the button click, e.g., navigate to activity log page for the specific plant
-          console.log(uid,plant.common_name);
-          openActivityLog(uid, plant.common_name);
+        // Handle the button click, e.g., navigate to activity log page for the specific plant
+        console.log(uid, plant.common_name);
+        openActivityLog(uid, plant.common_name);
       });
 
       // Append the button to the plant details div
@@ -207,35 +207,10 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const response = await axios.request(options);
       console.log(response.data);
-      // const response = await axios.post(
-      //   "https://chatgpt-api7.p.rapidapi.com/ask",
-      //   { query },
-      //   {
-      //     headers: {
-      //       "content-type": "application/json",
-      //       "X-RapidAPI-Key":
-      //         "5bad4eab10msh33670bf2437cebbp10e966jsn5bb9a8d32eb1",
-      //       "X-RapidAPI-Host": "chatgpt-api7.p.rapidapi.com",
-      //     },
-      //   }
-      // );
-      // const goodResponse = JSON.parse(response.data);
       const cleanedResponse = response.data.response.replace(/^AI:/, "");
       const tipsContent = document.getElementById("tipsContent");
       tipsContent.innerHTML = formatTips(cleanedResponse);
       preloader.remove();
-      // Check if the response has data and content
-      // if (
-      //   response.data &&
-      //   response.data.data &&
-      //   response.data.data.length > 0
-      // ) {
-      //   // Extract and display tips in the modal
-      //   const tipsContent = document.getElementById("tipsContent");
-      //   tipsContent.innerHTML = response.data.data[0].content;
-      // } else {
-      //   console.error("No data or content in the response");
-      // }
     } catch (error) {
       console.error(error);
     }
@@ -271,53 +246,65 @@ document.addEventListener("DOMContentLoaded", function () {
     return formattedTips;
   }
 
-  document.getElementById('addActivityButton').addEventListener('click', function() {
-    // Show the popup
-    document.getElementById('activityPopup').style.display = 'block';
-
-    // Fetch the user's nursery data and populate the dropdown
-    fetchPlantsInNursery(uid)
-  });
-
-  document.getElementById('logActivityButton').addEventListener('click', function() {
-    const uid = JSON.parse(localStorage.getItem("id"));
-    var selectedPlant = document.getElementById('plantDropdown').value;
-  
-    // Create data object with the selected plant
-    var data = {
-      uid: uid,
-      plantName: selectedPlant
-    };
-  
-    // Use axios for making the POST request
-    axios.post('http://localhost:5503/logActivity', data, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => {
-        // Log success message
-        console.log(response.data.message);
-  
-        // Hide the popup
-        document.getElementById('activityPopup').style.display = 'none';
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // Handle error, show error message, etc.
+  document
+    .getElementById("addActivityButton")
+    .addEventListener("click", function () {
+      // Show the popup
+      document.getElementById("activityPopup").style.display = "block";
+      Push.create("Hello world!", {
+        body: "How's it hangin'?",
+        icon: "/icon.png",
+        timeout: 4000,
+        onClick: function () {
+          window.focus();
+          this.close();
+        },
       });
-  })
+      // Fetch the user's nursery data and populate the dropdown
+      fetchPlantsInNursery(uid);
+    });
 
+  document
+    .getElementById("logActivityButton")
+    .addEventListener("click", function () {
+      const uid = JSON.parse(localStorage.getItem("id"));
+      var selectedPlant = document.getElementById("plantDropdown").value;
+
+      // Create data object with the selected plant
+      var data = {
+        uid: uid,
+        plantName: selectedPlant,
+      };
+
+      // Use axios for making the POST request
+      axios
+        .post("http://localhost:5503/logActivity", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          // Log success message
+          console.log(response.data.message);
+
+          // Hide the popup
+          document.getElementById("activityPopup").style.display = "none";
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle error, show error message, etc.
+        });
+    });
 
   function updatePlantDropdown(plants) {
-    var dropdown = document.getElementById('plantDropdown');
+    var dropdown = document.getElementById("plantDropdown");
 
     // Clear existing options
-    dropdown.innerHTML = '';
+    dropdown.innerHTML = "";
 
     // Add new options based on user's nursery data
-    plants.forEach(plant => {
-      var option = document.createElement('option');
+    plants.forEach((plant) => {
+      var option = document.createElement("option");
       option.value = plant.common_name; // Assuming each plant has a unique identifier
       option.text = plant.common_name; // Replace with the property that represents the plant's name
       dropdown.add(option);
@@ -325,79 +312,82 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Update the function to fetch activity logs
-async function fetchActivityLogs(userId, plantName) {
-  try {
-    const response = await fetch(`http://localhost:5503/getActivityLogs?userId=${userId}&plantName=${plantName}`);
-    const data = await response.json();
+  async function fetchActivityLogs(userId, plantName) {
+    try {
+      const response = await fetch(
+        `http://localhost:5503/getActivityLogs?userId=${userId}&plantName=${plantName}`
+      );
+      const data = await response.json();
 
-    if (data.activityLogs && data.activityLogs.length > 0) {
-      console.log(data.activityLogs);
-      //displayActivityLogs(data.activityLogs);
-      return data.activityLogs;
-    } else {
-      console.log("No activity logs found.");
-      return [];
+      if (data.activityLogs && data.activityLogs.length > 0) {
+        console.log(data.activityLogs);
+        //displayActivityLogs(data.activityLogs);
+        return data.activityLogs;
+      } else {
+        console.log("No activity logs found.");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching activity logs:", error);
+      throw error;
     }
-  } catch (error) {
-    console.error("Error fetching activity logs:", error);
-    throw error;
   }
-}
 
-
-
-function openActivityLog(userId, plantName) {
-  // Fetch activity logs for the specific user and plant
-  fetchActivityLogs(userId, plantName)
-    .then((activityLogs) => {
-      displayActivityLogsInPopup(activityLogs);
-      // Show the popup
-      document.getElementById("activityLogModal").style.display = "block";
-    })
-    .catch((error) => {
-      console.error("Error fetching and displaying activity logs:", error);
-    });
-}
-
-function closeActivityLogModal() {
-  const activityLogModal = document.getElementById("activityLogModal");
-  activityLogModal.style.display = "none";
-}
-
-// Add a click event listener to close the activity log modal
-document.getElementById("closeLogModalButton").addEventListener("click", closeActivityLogModal);
-document.getElementById("activityLogModal").addEventListener("click", function (event) {
-  if (event.target.id === "activityLogModal" || event.target.classList.contains("close")) {
-      closeActivityLogModal();
-  }
-});
-
-function displayActivityLogsInPopup(activityLogs) {
-  const activityLogList = document.getElementById("activityLogList");
-
-  // Clear existing content
-  activityLogList.innerHTML = "";
-
-  if (activityLogs.length > 0) {
-    activityLogs.forEach((log) => {
-      const logItem = document.createElement("li");
-      const localDate = new Date(log.activity_date);
-      const formattedDate = localDate.toLocaleString('en-US', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        
+  function openActivityLog(userId, plantName) {
+    // Fetch activity logs for the specific user and plant
+    fetchActivityLogs(userId, plantName)
+      .then((activityLogs) => {
+        displayActivityLogsInPopup(activityLogs);
+        // Show the popup
+        document.getElementById("activityLogModal").style.display = "block";
+      })
+      .catch((error) => {
+        console.error("Error fetching and displaying activity logs:", error);
       });
-      logItem.textContent = `${log.plant_name} - ${formattedDate} - ${log.activity_time}   `;
-      activityLogList.appendChild(logItem);
-    });
-  } else {
-    const noLogsMessage = document.createElement("li");
-    noLogsMessage.textContent = "No activity logs found.";
-    activityLogList.appendChild(noLogsMessage);
   }
-}
 
+  function closeActivityLogModal() {
+    const activityLogModal = document.getElementById("activityLogModal");
+    activityLogModal.style.display = "none";
+  }
 
+  // Add a click event listener to close the activity log modal
+  document
+    .getElementById("closeLogModalButton")
+    .addEventListener("click", closeActivityLogModal);
+  document
+    .getElementById("activityLogModal")
+    .addEventListener("click", function (event) {
+      if (
+        event.target.id === "activityLogModal" ||
+        event.target.classList.contains("close")
+      ) {
+        closeActivityLogModal();
+      }
+    });
 
+  function displayActivityLogsInPopup(activityLogs) {
+    const activityLogList = document.getElementById("activityLogList");
+
+    // Clear existing content
+    activityLogList.innerHTML = "";
+
+    if (activityLogs.length > 0) {
+      activityLogs.forEach((log) => {
+        const logItem = document.createElement("li");
+        const localDate = new Date(log.activity_date);
+        const formattedDate = localDate.toLocaleString("en-US", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+        logItem.textContent = `${log.plant_name} - ${formattedDate} - ${log.activity_time}   `;
+        activityLogList.appendChild(logItem);
+      });
+    } else {
+      const noLogsMessage = document.createElement("li");
+      noLogsMessage.textContent = "No activity logs found.";
+      activityLogList.appendChild(noLogsMessage);
+    }
+  }
 });

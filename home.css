@@ -390,6 +390,7 @@ h3 {
   font-weight: bold;
   cursor: pointer;
   border: 2px solid #000;
+  border-radius:4px;
   margin-left: 1rem;
 }
 
@@ -398,6 +399,24 @@ h3 {
   border: 2px solid #00684a;
 }
 
-.txt{
-  font-family: "Value Serif";
+.txt {
+  font-family: "Euclid Circular A";
+}
+#plantDropdown {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #00ed64; /* Green border */
+  border-radius: 5px;
+  background-color: #fff; /* White background */
+  color: #001e2b; /* Dark text color */
+  width: 200px; /* Adjust the width as needed */
+}
+
+#plantDropdown:hover {
+  background-color: #ffff; /* Light gray background on hover */
+}
+
+#plantDropdown:focus {
+  outline: none; /* Remove default focus outline */
+  /* border-color: #007bff; Blue border on focus */
 }
